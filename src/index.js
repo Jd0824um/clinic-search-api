@@ -19,7 +19,10 @@ app.use(cors());
 // defining an endpoint to return all clinics based of parameters given
 app.get("/api", (request, response) => {
   getData()
-    .catch((err) => console.log(err))
+    .catch(() => {
+      response.statusMessage = "Something went wrong.";
+      response.status(400);
+    })
     .then((data) => { // Able to use any combination of search terms to query results from the dataset
       var searchResult = data;
 
@@ -43,19 +46,27 @@ app.get("/api", (request, response) => {
         searchResult = searchResult.filter(clinic => clinic?.availability?.to === availabilityTo || clinic?.open?.to === availabilityTo);
       }
 
-      response.send(searchResult); // If no params are given, return all results
+      if (searchResult.length <= 0) {
+        response.statusMessage = "Could not find what you were looking for."
+        response.status(404);
+        response.end();
+      } else {
+        response.statusMessage = "Query complete!";
+        response.status(200);
+        response.send(searchResult); // If no params are given, return all results
+      }
     });
 });
 
 // Start the server
 app.listen(3001, () => {
-  console.log("listening on port 3001");
+  console.log("Listening on port 3001");
 });
 
 async function getData() {
   // Convert JSON strings into objects
-  dentalClinicResponse = JSON.parse(await requestPromise(dentalClinicsURL)).catch(err => console.log(err)); 
-  vetClinicResponse = JSON.parse(await requestPromise(vetClinicsURL)).catch(err => console.log(err));
+  dentalClinicResponse = JSON.parse(await requestPromise(dentalClinicsURL)); 
+  vetClinicResponse = JSON.parse(await requestPromise(vetClinicsURL));
 
   // Combine objects
   return dentalClinicResponse.concat(vetClinicResponse);
