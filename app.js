@@ -40,11 +40,11 @@ app.get("/api", (request, response) => {
       }
 
       if (availabilityFrom) {
-        searchResult = searchResult.filter(clinic => clinic?.availability?.from === availabilityFrom || clinic?.open?.from === availabilityFrom);
+        searchResult = searchResult.filter(clinic => clinic?.availability?.from === availabilityFrom || clinic?.opening?.from === availabilityFrom);
       }
 
       if (availabilityTo) {
-        searchResult = searchResult.filter(clinic => clinic?.availability?.to === availabilityTo || clinic?.open?.to === availabilityTo);
+        searchResult = searchResult.filter(clinic => clinic?.availability?.to === availabilityTo || clinic?.opening?.to === availabilityTo);
       }
 
       if (searchResult.length <= 0) {
