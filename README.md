@@ -1,4 +1,4 @@
-# Clinic Search Api
+# Clinic Search API
 A RESTful API that can be called, using your browser or tools like postman, to return information about available vet and dental clinics.
 
 
